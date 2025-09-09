@@ -8,9 +8,8 @@ dotenv.config();
 const app = express();
 app.use(cors({
   origin: 'https://manya-s-expenditure-calendar.netlify.app',
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
-
+app.use(express.json());
 // Config
 const PORT = process.env.PORT || 10001;
 const DEFAULT_ORIGINS = ['http://localhost:10000', 'http://localhost:1000'];
