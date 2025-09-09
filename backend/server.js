@@ -6,24 +6,29 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-app.use(cors({
-  origin: 'https://manya-s-expenditure-calendar.netlify.app',
-}));
-app.use(express.json());
+
 // Config
 const PORT = process.env.PORT || 10001;
 const DEFAULT_ORIGINS = ['http://localhost:10000', 'http://localhost:1000'];
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || DEFAULT_ORIGINS[0];
 
-// Middleware
-const allowedOrigins = new Set(
-  (process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : DEFAULT_ORIGINS).concat(FRONTEND_ORIGIN)
-);
+// CORS Configuration - Allow only the Netlify origin or default origins
+const allowedOrigins = new Set([
+  'https://manya-s-expenditure-calendar.netlify.app',
+  ...(process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : DEFAULT_ORIGINS),
+  FRONTEND_ORIGIN
+]);
+
 app.use(
   cors({
     origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
-      if (allowedOrigins.has(origin)) return callback(null, true);
+      
+      if (allowedOrigins.has(origin)) {
+        return callback(null, true);
+      }
+      
       return callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
