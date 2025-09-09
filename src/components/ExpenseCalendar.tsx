@@ -9,9 +9,10 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isTod
 interface ExpenseCalendarProps {
   selectedDate: Date;
   onDateSelect: (date: Date) => void;
+  onExpenseAdded: () => void;
 }
 
-export const ExpenseCalendar: React.FC<ExpenseCalendarProps> = ({ selectedDate, onDateSelect }) => {
+export const ExpenseCalendar: React.FC<ExpenseCalendarProps> = ({ selectedDate, onDateSelect, onExpenseAdded }) => {
   const [currentMonth, setCurrentMonth] = useState(selectedDate);
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [selectedDateForAdd, setSelectedDateForAdd] = useState<Date | null>(null);
@@ -47,6 +48,8 @@ export const ExpenseCalendar: React.FC<ExpenseCalendarProps> = ({ selectedDate, 
 
   const handleDateClick = (date: Date) => {
     onDateSelect(date);
+    setSelectedDateForAdd(date);
+    setShowAddExpense(true);
   };
 
   const handleAddExpense = (date: Date) => {
@@ -66,6 +69,7 @@ export const ExpenseCalendar: React.FC<ExpenseCalendarProps> = ({ selectedDate, 
     
     setExpenses(dailyTotals);
     setShowAddExpense(false);
+    onExpenseAdded();
   };
 
   return (
@@ -118,36 +122,37 @@ export const ExpenseCalendar: React.FC<ExpenseCalendarProps> = ({ selectedDate, 
                 <div
                   key={dateStr}
                   className={`
-                    calendar-day min-h-[80px] p-2 cursor-pointer border rounded-lg
-                    ${hasExpenses ? 'has-expenses' : 'border-border/30 hover:border-primary/50'}
-                    ${isCurrentDay ? 'ring-2 ring-primary ring-offset-2' : ''}
-                    ${isSelected ? 'bg-primary/10 border-primary' : ''}
+                    calendar-day min-h-[100px] p-3 cursor-pointer border-2 rounded-xl transition-all duration-200 hover:scale-105 group
+                    ${hasExpenses ? 'bg-gradient-to-br from-primary/20 to-primary/10 border-primary/40 shadow-lg hover:shadow-xl' : 'border-border/40 hover:border-primary/60 hover:bg-primary/5'}
+                    ${isCurrentDay ? 'ring-2 ring-primary ring-offset-2 bg-primary/5' : ''}
+                    ${isSelected ? 'bg-primary/15 border-primary' : ''}
                     ${!isSameMonth(date, currentMonth) ? 'opacity-30' : ''}
+                    ${isSeptember ? 'hover:bg-birthday-accent/10' : ''}
                   `}
                   onClick={() => handleDateClick(date)}
                 >
                   <div className="flex flex-col h-full">
-                    <div className="flex items-center justify-between">
-                      <span className={`text-sm font-medium ${isCurrentDay ? 'text-primary font-bold' : ''}`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className={`text-lg font-bold ${isCurrentDay ? 'text-primary' : hasExpenses ? 'text-primary' : 'text-foreground'} ${isSeptember ? 'text-birthday-primary' : ''}`}>
                         {format(date, 'd')}
                       </span>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-primary/20"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAddExpense(date);
-                        }}
-                      >
-                        <Plus className="h-3 w-3" />
-                      </Button>
+                      {hasExpenses && (
+                        <div className="flex items-center gap-1">
+                          <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+                          <span className="text-xs text-primary font-medium">
+                            {getExpensesForDate(dateStr).length}
+                          </span>
+                        </div>
+                      )}
                     </div>
                     {hasExpenses && (
-                      <div className="mt-1 text-xs text-primary font-semibold">
-                        ₹{total.toFixed(0)}
+                      <div className="mt-auto">
+                        <div className="text-sm font-bold text-primary bg-white/50 backdrop-blur-sm px-2 py-1 rounded-lg">
+                          ₹{total.toLocaleString()}
+                        </div>
                       </div>
                     )}
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl pointer-events-none" />
                   </div>
                 </div>
               );

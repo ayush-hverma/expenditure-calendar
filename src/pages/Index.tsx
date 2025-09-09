@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Heart, Sparkles } from 'lucide-react';
 import { ExpenseCalendar } from '@/components/ExpenseCalendar';
 import { ExpenseSummary } from '@/components/ExpenseSummary';
-import { QuickActions } from '@/components/QuickActions';
+
 import floralPattern from '@/assets/floral-pattern.jpg';
 import septemberBirthday from '@/assets/september-birthday.jpg';
 
@@ -64,28 +64,18 @@ const Index = () => {
 
         {/* Main Layout */}
         <div className="container mx-auto px-4 py-6">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Calendar - Takes up most space */}
-            <div className="lg:col-span-3 space-y-6">
-              <ExpenseCalendar
-                selectedDate={selectedDate}
-                onDateSelect={setSelectedDate}
-                key={refreshTrigger}
-              />
-              
-              <ExpenseSummary 
-                selectedDate={selectedDate}
-                key={refreshTrigger}
-              />
-            </div>
-
-            {/* Sidebar - Quick actions and summary */}
-            <div className="lg:col-span-1">
-              <QuickActions
-                selectedDate={selectedDate}
-                onExpenseAdded={handleExpenseAdded}
-              />
-            </div>
+          <div className="space-y-6">
+            <ExpenseCalendar
+              selectedDate={selectedDate}
+              onDateSelect={setSelectedDate}
+              onExpenseAdded={handleExpenseAdded}
+              key={refreshTrigger}
+            />
+            
+            <ExpenseSummary 
+              selectedDate={selectedDate}
+              key={refreshTrigger}
+            />
           </div>
         </div>
 
