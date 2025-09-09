@@ -69,12 +69,11 @@ const Index = () => {
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate}
               onExpenseAdded={handleExpenseAdded}
-              key={refreshTrigger}
             />
             
             <ExpenseSummary 
               selectedDate={selectedDate}
-              key={refreshTrigger}
+              refreshTrigger={refreshTrigger}
             />
           </div>
         </div>

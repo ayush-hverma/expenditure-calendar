@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 
 interface ExpenseSummaryProps {
   selectedDate: Date;
+  refreshTrigger: number;
 }
 
 const categoryLabels: Record<string, string> = {
@@ -29,7 +30,7 @@ const categoryColors: Record<string, string> = {
   other: 'bg-gray-100 text-gray-800 border-gray-200',
 };
 
-export const ExpenseSummary: React.FC<ExpenseSummaryProps> = ({ selectedDate }) => {
+export const ExpenseSummary: React.FC<ExpenseSummaryProps> = ({ selectedDate, refreshTrigger }) => {
   const [monthlyTotal, setMonthlyTotal] = useState(0);
   const [categoryTotals, setCategoryTotals] = useState<Record<string, number>>({});
   const [budgets, setBudgets] = useState<any[]>([]);
@@ -53,7 +54,7 @@ export const ExpenseSummary: React.FC<ExpenseSummaryProps> = ({ selectedDate }) 
     setCategoryTotals(categories);
     setBudgets(loadedBudgets);
     setPreviousMonthTotal(prevTotal);
-  }, [selectedDate, currentMonth, currentYear]);
+  }, [selectedDate, currentMonth, currentYear, refreshTrigger]);
 
   const monthlyBudget = budgets.find(b => b.type === 'monthly')?.amount || 0;
   const budgetProgress = monthlyBudget > 0 ? (monthlyTotal / monthlyBudget) * 100 : 0;

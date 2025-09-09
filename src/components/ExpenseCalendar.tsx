@@ -21,8 +21,8 @@ export const ExpenseCalendar: React.FC<ExpenseCalendarProps> = ({ selectedDate, 
   // Check if current month is September for birthday theme
   const isSeptember = currentMonth.getMonth() === 8; // September is month 8 (0-indexed)
 
+  // Update expenses when current month changes or when expenses are added
   useEffect(() => {
-    // Load expenses for current month
     const monthExpenses = getExpensesForMonth(currentMonth.getFullYear(), currentMonth.getMonth());
     const dailyTotals: Record<string, number> = {};
     
@@ -58,7 +58,7 @@ export const ExpenseCalendar: React.FC<ExpenseCalendarProps> = ({ selectedDate, 
   };
 
   const handleExpenseAdded = () => {
-    // Refresh expenses
+    // Refresh expenses for the current month
     const monthExpenses = getExpensesForMonth(currentMonth.getFullYear(), currentMonth.getMonth());
     const dailyTotals: Record<string, number> = {};
     
@@ -69,6 +69,8 @@ export const ExpenseCalendar: React.FC<ExpenseCalendarProps> = ({ selectedDate, 
     
     setExpenses(dailyTotals);
     setShowAddExpense(false);
+    
+    // Notify parent component to refresh other components
     onExpenseAdded();
   };
 
