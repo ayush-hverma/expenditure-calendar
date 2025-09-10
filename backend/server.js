@@ -37,7 +37,7 @@ app.use(
 app.use(express.json());
 
 // Mongo
-const mongoUrl ='mongodb+srv://ayu5hhverma03:ayush2503@expenditure.elmiwyd.mongodb.net/?retryWrites=true&w=majority&appName=expenditure' ;
+const mongoUrl =process.env.MONGODB_URL ;
 if (!mongoUrl) {
   console.warn('MONGODB_URL is not set. Please add it to your .env');
 }
